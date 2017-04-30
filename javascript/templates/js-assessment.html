@@ -5,6 +5,7 @@
   <title>Skills JavaScript</title>
   <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="static/styles.css">
+  <script src ="https://code.jquery.com/jquery.js"></script>
 </head>
 <body class="container">
 
@@ -38,7 +39,13 @@
 
 <script>
   "use strict";
-  // code here for above-problem
+  var changeToGoodbye = document.getElementById("change-hello-to-goodbye-button");
+  var messageToChange = document.getElementById("message-to-change");
+  var clickChangeToGoodbye = function(evt) {
+    messageToChange.innerText = "goodbye";
+  };
+  changeToGoodbye.addEventListener('click', clickChangeToGoodbye);
+ 
 </script>
 
 <div class="hint">
@@ -66,7 +73,12 @@
 
 <script>
   "use strict";
-  // code here for above problem
+  var preventingFormSubmission = document.getElementById("prevent-form-submission-form");
+  var alertNoFormSubmission = function(evt) {
+      alert("Alert Box POP UP. Javascript Problem2");
+      evt.preventDefault();
+      };
+      preventingFormSubmission.addEventListener('submit', alertNoFormSubmission);
 </script>
 
 <div class="hint">
@@ -88,17 +100,18 @@
 
 <script>
   "use strict";
+    function reverseString() {
+    var message = "Porcupines are cute";
+    var reversedMessage = "";
 
-//  Here's a stub of a function you can use!
-
-//  function reverseString(evt) {
-//    var msg = "Porcupines are cute";
-//
-//    // do some stuff here to reverse that string into a new variable
-//    var newMsg = "This should be the reversed string";
-//
-//    alert(newMsg);
-//  }
+    var lastChar = message.length - 1;
+    for (var i = lastChar; i > -1; i--) {
+      reversedMessage += message[i];
+    }
+    alert(reversedMessage);
+    } 
+    var button = document.getElementById('reverse-string-button');
+    button.addEventListener('click', reverseString);
 
 
 </script>
@@ -120,11 +133,29 @@
 
 <script>
   "use strict";
-  // code here for above problem
-  // if user enters 5, result will be 1 + 2 + 3 + 4 + 5 = 15
 
+  document.getElementById("sum-to-n-submission-button").addEventListener("click", function(event) {
+            event.preventDefault();
+            //sumToNResultChange(evt);
+
+            var sumToNField = document.getElementById('sum-to-n-field').value;
+            
+            //variable for new sum
+            var newSumToN = 0;
+
+            //MATH
+            for (var i = Number(sumToNField); i > 0; i--) { 
+                newSumToN = newSumToN + i;
+            }
+            //get element to change
+            var sumToNResultText = document.getElementById("sum-to-n-result");
+            sumToNResultText.innerHTML=String(newSumToN);
+          
+            //user confirms num to sum
+            var sumToN = document.getElementById("sum-to-n");
+            sumToN.addEventListener('submit', sumToNResultChange);
+            });
 </script>
-
 
 
 <h2>jQuery</h2>
@@ -153,7 +184,12 @@
 
 <script>
   "use strict";
-  // put your code here
+
+ function changePhoto (evt) {
+    $('img#kittenz-rule').attr('src', 'https://img.buzzfeed.com/buzzfeed-static/static/2017-03/21/12/asset/buzzfeed-prod-fastlane-02/sub-buzz-5836-1490115195-2.jpg?downsize=715:*&output-format=auto&output-quality=auto'); 
+} 
+  $('img#kittenz-rule').dblclick(changePhoto);
+
 </script>
 
 <div class="hint">
@@ -184,7 +220,51 @@
 
 <script>
   "use strict";
-  // put your code here
+  var secretNumber = 0
+  var guess = 0
+  //game start/initialization
+  $("#play-guessing-game").on('click', startGame);
+  //game guesses
+  $("#try-this-number").on('click', testGuess);
+  
+  function startGame() {
+    $("#number-guessed").val('');
+    //disable Play button
+    $("#play-guessing-game").prop("disabled", true);
+    //enable Guess
+    $("#number-guessed").prop("disabled", false);
+    $("#try-this-number").prop("disabled", false);
+    //user guess number between 1-100?  
+    $("#number-guessing-msg").html ("Guess a number between 1 and 100 and click Guess!");
+    //import random number 
+    secretNumber = Math.floor(Math.random() * 100);
+  }
+ 
+  function testGuess(evt) {
+    evt.preventDefault();
+    // var test = document.getElementById('number-guessed').value;
+    guess = parseInt($("#number-guessed").val());
+      if (guess < secretNumber) {
+          $("#number-guessing-msg").html ("Too low!  Try again");
+        }
+      else if (guess > secretNumber) {
+            $("#number-guessing-msg").html ("Too high!  Try again");
+        }
+        else if ( guess == secretNumber){
+                correctGuess();
+            }
+  }
+
+  function correctGuess() {
+    //end game and message game winner
+    $("#number-guessing-msg").html ("You got it...good job!  Hit Play! to play again.")
+    //enable "Play!"" button
+    $("#play-guessing-game").prop("disabled", false);
+    //disable "Guess" button
+    $("#number-guessed").prop("disabled", true);
+    $("#try-this-number").prop("disabled", true);
+  }
+  
 </script>
 
 
@@ -250,7 +330,29 @@
     $("#t-rex-img").append(tRexPhoto);
   }
 
-  // put your code here
+  document.getElementById("attack").addEventListener("click", function(event) {
+                event.preventDefault(); // stop form submit
+
+                var trextarget = document.getElementById("t-rex-form").elements["t-rex-target"].value;
+
+            $.ajax({
+                    type: "POST",
+                    url: "/t-rex-attack.json",
+                    data: "t-rex-target="+trextarget,
+                    success: function(data, textStatus, jqXHR) {
+                            console.log(data);
+                            //console.log(textStatus);
+                            //console.log(jqXHR);
+                            showTRexResults(data);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log(jqXHR);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    }
+                });
+      });
+
 
 </script>
 
